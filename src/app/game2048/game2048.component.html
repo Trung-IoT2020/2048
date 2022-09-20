@@ -21,7 +21,7 @@
     </div>
     <div class="score-level" style="margin-top: 10px;">
       <div class="row" style="display: flex;width: 100%;margin: auto;">
-        <div class="col" style="justify-content: left;text-align: left; padding: 0">
+        <div class="col" style="justify-content: left;text-align: left; padding: 0;width: 100%;">
           <h4>Điểm số: {{sumCount}}</h4>
           <h4>Độ khó: {{level}}</h4>
           <div class="stop-watch" style="justify-content: left;text-align: left;">
@@ -29,7 +29,7 @@
             <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
           </div>
         </div>
-        <div class="col" style="justify-content: right;text-align: right; padding: 0">
+        <div class="col" style="justify-content: right;text-align: right; padding: 0;width: 100%;">
           <h4>Điểm cao đã đạt: {{sumCountHistory}}</h4>
           <h4>Độ khó đã đạt: {{levelHistory}}</h4>
           <div class="stop-watch" style="justify-content: right;text-align: right;">
@@ -42,7 +42,7 @@
     </div>
   </div>
 
-  <div class="field">
+  <div class="field" style="margin: 30px 0">
     <div class="place__line" *ngFor="let place of places">
       <div class="place__elem" *ngFor="let pl of place" [style.background-color]="pl ? color(pl) : null">
         <div>
