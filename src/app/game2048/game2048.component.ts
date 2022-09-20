@@ -7,15 +7,17 @@ import {Component, OnInit, ElementRef, Renderer2, HostListener} from '@angular/c
 })
 export class Game2048Component implements OnInit {
 
+
   constructor(public renderer: Renderer2, private el: ElementRef) {
   }
+
 
   gameOver = false;
   x: any;
   y: any;
   defaultTouch = {x: 0, y: 0, time: 0};
   sumCount = 0;
-
+  countFail = 0;
 
   public placesDefault: any[] = [
     [2, '', '', ''],
@@ -51,8 +53,14 @@ export class Game2048Component implements OnInit {
   ms = 0;
   isRunning = false;
   timerId = 0;
-
   controllerPlayer = true;
+
+
+  sumCountHistory = 0;
+  levelHistory = 0;
+  mmHistory = 0;
+  ssHistory = 0;
+  msHistory = 0;
 
   @HostListener('touchstart', ['$event'])
   @HostListener('touchend', ['$event'])
@@ -67,8 +75,6 @@ export class Game2048Component implements OnInit {
       const deltaX = touch.pageX - this.defaultTouch.x;
       const deltaY = touch.pageY - this.defaultTouch.y;
       const deltaTime = event.timeStamp - this.defaultTouch.time;
-
-      // simulte a swipe -> less than 500 ms and more than 60 px
       if (deltaTime < 500) {
         // touch movement lasted less than 500 ms
         if (Math.abs(deltaX) > 60) {
@@ -177,6 +183,16 @@ export class Game2048Component implements OnInit {
         }
       }
     });
+
+    const a = localStorage.getItem('save') as any;
+    const b = JSON.parse(a);
+    if (b) {
+      this.sumCountHistory = b.sumCount;
+      this.levelHistory = b.level;
+      this.mmHistory = b.mm;
+      this.ssHistory = b.ss;
+      this.msHistory = b.ms;
+    }
   }
 
   addNumber(): any {
@@ -302,6 +318,8 @@ export class Game2048Component implements OnInit {
         this.level = 10;
         this.win = true;
         this.isRunning = true;
+
+
         this.clickHandler();
       }
 
@@ -313,22 +331,21 @@ export class Game2048Component implements OnInit {
     return (Math.floor(Math.random() * (max - min)) + min);
   }
 
-  countFail = 0;
 
   swipe(action: any): any {
 
     this.numberAdded = false;
-    if (action === 0 || action === 3) {    // @ts-ignore
+    if (action === 0 || action === 3) {
+      // @ts-ignore
       this.filterEmptyElem(this.pl[action], this.cellTransition);
-      if (this.cellsConnect) {    // @ts-ignore
-        this.filterEmptyElem(this.pl[action], this.cellConnect);    // @ts-ignore
-        this.filterEmptyElem(this.pl[action], this.cellTransition);
+      if (this.cellsConnect) {  // @ts-ignore
+        this.filterEmptyElem(this.pl[action], this.cellConnect);  // @ts-ignore
+        this.filterEmptyElem(this.pl[action], this.cellTransition);  // @ts-ignore
       }
-    } else {    // @ts-ignore
+    } else {  // @ts-ignore
       this.filterEmptyElemReverse(this.pl[action], this.cellTransition);
-      if (this.cellsConnect) {    // @ts-ignore
-        this.filterEmptyElemReverse(this.pl[action], this.cellConnect);
-        // @ts-ignore
+      if (this.cellsConnect) {  // @ts-ignore
+        this.filterEmptyElemReverse(this.pl[action], this.cellConnect);  // @ts-ignore
         this.filterEmptyElemReverse(this.pl[action], this.cellTransition);
       }
     }
@@ -338,7 +355,6 @@ export class Game2048Component implements OnInit {
     } else if (this.numberAdded) {
       this.indexAddNumber = this.addNumber();
     }
-
     if (this.checkFreeCells() === -1 && !this.checkMoves(this.indexAddNumber, this.pl)) {
       for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
@@ -348,9 +364,10 @@ export class Game2048Component implements OnInit {
           }
         }
       }
-    }
-  }
 
+    }
+
+  }
 
   resultGameOver(countFail: any): any {
     if (countFail === 16) {
@@ -363,6 +380,7 @@ export class Game2048Component implements OnInit {
 
   closePopup(i: any): any {
     if (i === 1) {
+      this.countFail = 0;
       this.mm = 0;
       this.ss = 0;
       this.ms = 0;
@@ -393,11 +411,21 @@ export class Game2048Component implements OnInit {
       this.gameOver = false;
       this.sumCount = 0;
       this.controllerPlayer = true;
+      const a = localStorage.getItem('save') as any;
+      const b = JSON.parse(a);
+      if (b) {
+        this.sumCountHistory = b.sumCount;
+        this.levelHistory = b.level;
+        this.mmHistory = b.mm;
+        this.ssHistory = b.ss;
+        this.msHistory = b.ms;
+      }
     } else {
       this.controllerPlayer = false;
       this.win = false;
       this.gameOver = false;
     }
+
   }
 
   checkMoves(el: any, pl: any): any {
@@ -439,10 +467,29 @@ export class Game2048Component implements OnInit {
       clearInterval(this.timerId);
     }
     this.isRunning = !this.isRunning;
+    let dataSave = {};
+    if (this.sumCount > this.sumCountHistory) {
+      dataSave = {
+        sumCount: this.sumCount,
+        level: this.level,
+        mm: this.mm,
+        ss: this.ss,
+        ms: this.ms,
+      };
+    } else {
+      dataSave = {
+        sumCount: this.sumCountHistory,
+        level: this.levelHistory,
+        mm: this.mmHistory,
+        ss: this.ssHistory,
+        ms: this.msHistory,
+      };
+    }
+
+    localStorage.setItem('save', JSON.stringify(dataSave));
   }
 
   format(num: number): any {
     return (num + '').length === 1 ? '0' + num : num + '';
   }
-
 }
