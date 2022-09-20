@@ -18,17 +18,28 @@
     <div style="width: 60%">
       <h2 class="subtitle">Chơi <strong>Game 2048</strong></h2>
       <h4>Tham gia các con số và đến <strong>2048!</strong></h4>
-      <div class="score-level">
-        <h4>Score: {{sumCount}}</h4>
-        <h4>Level: {{level}}</h4>
-
-        <div class="stop-watch">
-          <h4>Time: </h4>
-          <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
+    </div>
+    <div class="score-level" style="margin-top: 10px;">
+      <div class="row" style="display: flex;width: 100%;margin: auto;">
+        <div class="col" style="justify-content: left;text-align: left; padding: 0">
+          <h4>Điểm số: {{sumCount}}</h4>
+          <h4>Độ khó: {{level}}</h4>
+          <div class="stop-watch" style="justify-content: left;text-align: left;">
+            <h4>Thời gian: </h4>
+            <div class="display">{{format(mm)}}:{{format(ss)}}:{{format(ms)}}</div>
+          </div>
+        </div>
+        <div class="col" style="justify-content: right;text-align: right; padding: 0">
+          <h4>Điểm cao đã đạt: {{sumCountHistory}}</h4>
+          <h4>Độ khó đã đạt: {{levelHistory}}</h4>
+          <div class="stop-watch" style="justify-content: right;text-align: right;">
+            <h4>Thời gian: </h4>
+            <div class="display">{{format(mmHistory)}}:{{format(ssHistory)}}:{{format(msHistory)}}</div>
+          </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 
   <div class="field">
