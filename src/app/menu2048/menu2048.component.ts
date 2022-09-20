@@ -7,7 +7,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./menu2048.component.scss']
 })
 export class Menu2048Component implements OnInit {
-
   constructor(private router: Router) {
   }
 
